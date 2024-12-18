@@ -1,9 +1,6 @@
 import './App.css';
-import BoogieHome from './Pages/BoogieHome';
-import CreateBoogie from './Pages/CreateBoogie';
 import Home from './Pages/Home';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LinkBoogie from './Pages/LinkBoogie';
 import KakaoLoginCallback from './Components/KakaoLoginCallback';
 import { Navigate } from 'react-router-dom';
 import BoogieMain from './Pages/BoogieMain';
