@@ -14,9 +14,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/Home" />} />
         <Route path="/Home" element={<Home />} />
-        {/* <Route path="/BoogieHome" element={<BoogieHome />} />
-        <Route path="/CreateBoogie" element={<CreateBoogie />} />
-        <Route path="/LinkBoogie" element={<LinkBoogie />} /> */}
         <Route path="/BoogieMain" element={<BoogieMain />} />
         <Route path="/Kakao/callback" element={<KakaoLoginCallback />} />
       </Routes>

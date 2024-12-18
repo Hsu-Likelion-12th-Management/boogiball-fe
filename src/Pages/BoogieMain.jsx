@@ -82,6 +82,7 @@ const PlusBtn = styled.img`
   display: inline-block;
   vertical-align: middle;
 `;
+
 function BoogieMain() {
   return (
     <>

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../Assets/Images/img_bg_1.svg';
 import styled from 'styled-components';
 
@@ -28,6 +29,8 @@ const LoginBtn = styled.button`
 `;
 
 function Home() {
+  const navigate = useNavigate();
+
   const handleLogin = () => {
     const clientId = '9d19218f8e200ee0986f321c7a5843e3'; // 카카오 REST API 키
     // const redirectUri = 'http://localhost:8080/api/auth/kakao/callback'; // 로컬용

@@ -21,8 +21,8 @@ function KakaoLoginCallback() {
           const { accessToken } = response.data.data;
           localStorage.setItem('accessToken', accessToken);
 
-          // 홈 페이지로 이동
-          navigate('/home');
+          // BoogieMain 페이지로 이동
+          navigate('/BoogieMain');
         })
         .catch((error) => {
           console.error('로그인 실패:', error);
@@ -30,6 +30,7 @@ function KakaoLoginCallback() {
         });
     } else {
       console.error('Authorization code가 없습니다.');
+      alert('로그인 정보가 올바르지 않습니다.');
     }
   }, [navigate]);
 
