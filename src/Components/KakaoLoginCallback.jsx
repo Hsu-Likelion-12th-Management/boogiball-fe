@@ -21,7 +21,6 @@ function KakaoLoginCallback() {
           const { accessToken } = response.data.data;
           localStorage.setItem('accessToken', accessToken);
 
-          // BoogieMain 페이지로 이동
           navigate('/BoogieMain');
         })
         .catch((error) => {
