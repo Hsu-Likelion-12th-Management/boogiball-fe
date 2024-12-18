@@ -20,6 +20,7 @@ function KakaoLoginCallback() {
 
           const { accessToken } = response.data.data;
           localStorage.setItem('accessToken', accessToken);
+          console.log(response.data.data);
 
           navigate('/BoogieMain');
         })
