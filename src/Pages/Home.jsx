@@ -8,12 +8,12 @@ const HomeContainer = styled.div`
   background-repeat: no-repeat;
   width: 100%;
   height: 100vh;
-  position: relative; /* 부모 요소에 position 설정 */
+  position: relative;
 `;
 
 const LoginBtn = styled.button`
-  position: absolute; /* 버튼의 위치를 절대값으로 설정 */
-  bottom: 5%; /* 화면 하단에서 10% 위에 배치 */
+  position: absolute;
+  bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
   width: 19vw;
@@ -24,20 +24,27 @@ const LoginBtn = styled.button`
   font-size: 1.2vw;
   color: #000;
   cursor: pointer;
+  border: none;
 `;
 
 function Home() {
-  const REST_API_KEY = 'bb1570fed92af8a563be875549491f3b';
-  const REDIRECT_URI = 'localhost:3000/';
-  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const handleLogin = () => {
+    const clientId = '9d19218f8e200ee0986f321c7a5843e3'; // 카카오 REST API 키
+    // const redirectUri = 'http://localhost:8080/api/auth/kakao/callback'; // 로컬용
+    const redirectUri = 'https://bugi-ball.shop/api/auth/kakao/callback'; // 배포용
+    const responseType = 'code'; // OAuth 인증 코드 요청
+    const scope = 'profile_nickname,profile_image'; // 요청할 동의항목
 
-  const loginHandler = () => {
-    window.location.href = link;
+    // 카카오 OAuth 인증 URL 생성
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+
+    // 브라우저를 카카오 인증 URL로 리다이렉트
+    window.location.href = kakaoAuthUrl;
   };
 
   return (
     <HomeContainer>
-      <LoginBtn onClick={loginHandler}>카카오 로그인</LoginBtn>
+      <LoginBtn onClick={handleLogin}>카카오 로그인</LoginBtn>
     </HomeContainer>
   );
 }

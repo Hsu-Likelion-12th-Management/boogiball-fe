@@ -4,15 +4,19 @@ import CreateBoogie from './Pages/CreateBoogie';
 import Home from './Pages/Home';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LinkBoogie from './Pages/LinkBoogie';
+import KakaoLoginCallback from './Components/KakaoLoginCallback';
+import { Navigate } from 'react-router-dom';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Navigate to="/Home" />} />
+        <Route path="/Home" element={<Home />} />
         <Route path="/BoogieHome" element={<BoogieHome />} />
         <Route path="/CreateBoogie" element={<CreateBoogie />} />
         <Route path="/LinkBoogie" element={<LinkBoogie />} />
+        <Route path="/Kakao/callback" element={<KakaoLoginCallback />} />
       </Routes>
     </Router>
   );
