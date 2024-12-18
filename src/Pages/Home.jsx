@@ -1,6 +1,7 @@
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import backgroundImage from '../Assets/Images/img_bg_1.svg';
 import styled from 'styled-components';
+import backgroundImage from '../Assets/Images/img_bg_1.svg';
 
 const HomeContainer = styled.div`
   background-image: url(${backgroundImage});
@@ -31,9 +32,23 @@ const LoginBtn = styled.button`
 function Home() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+      console.log('받은 토큰:', token);
+
+      // 토큰 저장
+      localStorage.setItem('accessToken', token);
+
+      // BoogieMain으로 리다이렉트
+      navigate('/BoogieMain');
+    }
+  }, [navigate]);
+
   const handleLogin = () => {
     const clientId = '9d19218f8e200ee0986f321c7a5843e3'; // 카카오 REST API 키
-    // const redirectUri = 'http://localhost:8080/api/auth/kakao/callback'; // 로컬용
     const redirectUri = 'https://bugi-ball.shop/api/auth/kakao/callback'; // 배포용
     const responseType = 'code'; // OAuth 인증 코드 요청
     const scope = 'profile_nickname,profile_image'; // 요청할 동의항목
