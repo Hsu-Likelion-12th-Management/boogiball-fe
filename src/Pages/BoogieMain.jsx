@@ -123,13 +123,14 @@ function BoogieMain() {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        // No body needed
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log('Snowball page created successfully:', data);
-        alert('새로운 눈덩이 페이지가 생성되었습니다!');
+
+        // POST 요청 성공 시 모달을 띄움
+        setIsModalOpen(true);
       } else {
         console.error('Failed to create snowball page:', response.status);
         alert('페이지 생성에 실패했습니다. 다시 시도해주세요.');
@@ -166,6 +167,7 @@ function BoogieMain() {
         </ContentContainer>
       </WholeContainer>
 
+      {/* 모달 컴포넌트 */}
       <Modal isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
