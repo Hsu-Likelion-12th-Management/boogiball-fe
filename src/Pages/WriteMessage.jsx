@@ -4,11 +4,15 @@ import SendModal from './SendModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 function WriteMessage() {
-
+  const { paperId } = useParams(); // URL에서 paperId 가져오기
+  const location = useLocation(); // state 가져오기
+  const { name } = location.state || {}; // location.state에서 name 추출
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [messageContent, setMessageContent] = useState(''); // messageContent 상태 추가
+  const [messageContent, setMessageContent] = useState('');
   const navigate = useNavigate();
 
   const handleSendMessage = async () => {
@@ -25,18 +29,22 @@ function WriteMessage() {
     }
 
     const requestBody = {
-      paperId: 1, // 요청에 필요한 paperId
+      paperId: parseInt(paperId, 10),
       content: messageContent, // messageContent를 보내기
     };
 
     try {
-      const response = await axios.post('https://bugi-ball.shop/api/message', requestBody, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-    
+      const response = await axios.post(
+        'https://bugi-ball.shop/api/message',
+        requestBody,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
       if (response.status === 200) {
         setIsModalOpen(true); // 성공 시 모달 열기
       } else {
@@ -46,35 +54,31 @@ function WriteMessage() {
       console.error('메세지 전송 중 오류 발생:', error);
       alert('메세지 전송에 실패했습니다. 다시 시도해주세요.');
     }
-    
   };
 
-  
-    useEffect(() => {
-      if (isModalOpen) {
-        const timer = setTimeout(() => {
-          navigate('/MessageMain');
-        }, 2000);
-  
-        return () => clearTimeout(timer);
-      }
-    }, [isModalOpen, navigate]);
+  useEffect(() => {
+    if (isModalOpen) {
+      const timer = setTimeout(() => {
+        navigate('/MessageMain');
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isModalOpen, navigate]);
 
   return (
     <>
-      <Header />
+      <Header title={`${name} 님의 눈덩이`} />
 
       <WholeContainer>
-        <MessageContainer placeholder={`메세지를 남겨주세요!\n한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.`} 
-        value={messageContent}
-        onChange={(e) => setMessageContent(e.target.value)} />
+        <MessageContainer
+          placeholder={`메세지를 남겨주세요!\n한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.`}
+          value={messageContent}
+          onChange={(e) => setMessageContent(e.target.value)}
+        />
         <Button onClick={handleSendMessage}>메시지 전달하기</Button>
 
-        {isModalOpen && (
-          <SendModal
-            onClose={() => setIsModalOpen(false)}
-          />
-        )}
+        {isModalOpen && <SendModal onClose={() => setIsModalOpen(false)} />}
       </WholeContainer>
     </>
   );
@@ -102,9 +106,9 @@ const MessageContainer = styled.textarea`
   gap: 0.625rem;
   flex-shrink: 0;
   border-radius: 1.25rem;
-  border: 1px solid var(--blue-100, #AEC5E7);
-  background: rgba(214, 230, 255, 0.30);
-  color: var(--blue-100, #AEC5E7);
+  border: 1px solid var(--blue-100, #aec5e7);
+  background: rgba(214, 230, 255, 0.3);
+  color: var(--blue-100, #aec5e7);
   text-align: center;
   font-family: Pretendard;
   font-size: 20px;
@@ -114,7 +118,7 @@ const MessageContainer = styled.textarea`
   resize: none;
 
   &::placeholder {
-    color: var(--blue-100, #AEC5E7);
+    color: var(--blue-100, #aec5e7);
     text-align: center;
     font-family: Pretendard;
     font-size: 20px;
@@ -124,7 +128,7 @@ const MessageContainer = styled.textarea`
   }
 
   &:focus {
-    border: 1px solid var(--main-blue, #002E6E);
+    border: 1px solid var(--main-blue, #002e6e);
     color: black;
     outline: none;
   }
@@ -140,8 +144,8 @@ const Button = styled.div`
   gap: 0.625rem;
   flex-shrink: 0;
   border-radius: 0.625rem;
-  background: var(--main-blue, #002E6E);
-  color: var(--gray-white, #FFF);
+  background: var(--main-blue, #002e6e);
+  color: var(--gray-white, #fff);
   text-align: center;
   font-feature-settings: 'liga' off, 'clig' off;
   font-family: Pretendard;

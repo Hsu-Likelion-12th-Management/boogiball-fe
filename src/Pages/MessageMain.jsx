@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import styled from 'styled-components';
 import icon1 from '../Assets/message/icon1.svg';
@@ -6,35 +6,67 @@ import icon2 from '../Assets/message/icon2.svg';
 import icon3 from '../Assets/message/icon3.svg';
 import icon4 from '../Assets/message/icon4.svg';
 
-
 export default function MessageMain() {
-    const [cnt, setCnt] = useState(9);
-    const icons = [icon1, icon2, icon3, icon4]; // 아이콘 배열
-  
-    const contents = Array(cnt).fill(
-      '메세지를 남겨주세요! 한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요. 메세지를 남겨주세요! 한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요. 메세지를 남겨주세요! 한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.메세지를 남겨주세요! 한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.메세지를 남겨주세요! 한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.메세지를 남겨주세요!한  번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.메세지를 남겨주세요! 한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.'
-    );
-  
-    return (
-      <>
-        <Header />
-  
-        <WholeContainer>
-          <Wrapper>
-            {contents.map((item, index) => {
-              const randomIcon = icons[Math.floor(Math.random() * icons.length)]; // 랜덤 아이콘 선택
-              return (
-                <Content key={index}>
-                  <Icon src={randomIcon} alt={`icon-${index}`} />
-                  {item}
-                </Content>
-              );
-            })}
-          </Wrapper>
-        </WholeContainer>
-      </>
-    );
-  }
+  const [messages, setMessages] = useState([]); // 메시지 데이터를 상태로 관리
+  const icons = [icon1, icon2, icon3, icon4];
+  const paperId = 2; // paperId는 고정값으로 설정
+
+  // 메시지 조회 API 호출 함수
+  const fetchMessages = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const response = await fetch(
+        `https://bugi-ball.shop/api/paper/${paperId}/list`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Fetched messages:', responseData.data);
+        setMessages(responseData.data || []); // 메시지 데이터를 상태로 설정
+      } else {
+        console.error('Failed to fetch messages:', response.status);
+        alert('메시지를 불러오지 못했습니다.');
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+      alert('네트워크 에러가 발생했습니다.');
+    }
+  };
+
+  // 컴포넌트가 처음 렌더링될 때 메시지 조회
+  useEffect(() => {
+    fetchMessages();
+  }, []);
+
+  return (
+    <>
+      <Header />
+
+      <WholeContainer>
+        <Wrapper>
+          {messages.map((message, index) => {
+            const randomIcon = icons[message.randomEmojiValue % icons.length]; // API의 randomEmojiValue에 따라 아이콘 선택
+            return (
+              <Content key={index}>
+                <Icon src={randomIcon} alt={`icon-${index}`} />
+                <MessageContent>{message.content}</MessageContent>
+                <SenderName>- {message.name}</SenderName>
+              </Content>
+            );
+          })}
+        </Wrapper>
+      </WholeContainer>
+    </>
+  );
+}
 
 const WholeContainer = styled.div`
   display: flex;
@@ -51,7 +83,7 @@ const Wrapper = styled.div`
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   width: auto;
   max-height: calc(250px * 2 + 20px);
   overflow-y: auto;
@@ -78,12 +110,28 @@ const Content = styled.div`
   font-weight: 500;
   line-height: 150%; /* 18px */
   border-radius: 10px;
-  border: 1px solid var(--blue-200, #D6E6FF);
-  background: var(--gray-white, #FFF);
+  border: 1px solid var(--blue-200, #d6e6ff);
+  background: var(--gray-white, #fff);
 `;
 
 const Icon = styled.img`
-  width: 40px; /* 아이콘 크기 */
+  width: 40px;
   height: 40px;
-  margin-bottom: 10px; /* 텍스트와 간격 */
+  margin-bottom: 10px;
+`;
+
+const MessageContent = styled.p`
+  margin: 0;
+  font-size: 14px;
+  color: var(--gray-900, #242427);
+  font-family: Pretendard;
+  text-align: center;
+`;
+
+const SenderName = styled.p`
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: var(--blue-300, #aec5e7);
+  font-family: Pretendard;
+  text-align: center;
 `;
