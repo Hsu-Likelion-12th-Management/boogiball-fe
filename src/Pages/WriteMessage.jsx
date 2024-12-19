@@ -12,7 +12,7 @@ function WriteMessage() {
   const navigate = useNavigate();
 
   const handleSendMessage = async () => {
-    const accessToken = localStorage.getItem('authToken'); // AccessToken 불러오기
+    const accessToken = localStorage.getItem('accessToken'); // AccessToken 불러오기
 
     if (!accessToken) {
       alert('로그인이 필요합니다.');
