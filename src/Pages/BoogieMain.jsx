@@ -1,6 +1,9 @@
 import Header from '../Components/Header';
 import styled from 'styled-components';
 import Add from '../Assets/Images/ic_addball_32.svg';
+import EmptyBall from '../Assets/Images/img_emptyball.svg';
+import Modal from '../Components/Modal';
+import { useState } from 'react';
 
 const WholeContainer = styled.div`
   display: flex;
@@ -83,7 +86,36 @@ const PlusBtn = styled.img`
   vertical-align: middle;
 `;
 
+const BallImageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 3vw;
+  justify-content: center;
+  align-items: center;
+`;
+
+const BallImg = styled.img`
+  width: 35vw;
+  height: 25vw;
+`;
+
+const Yet = styled.p`
+  color: var(--blue-100, #aec5e7);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 1.6vw;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%;
+  margin: 0;
+`;
+
 function BoogieMain() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <>
       <Header />
@@ -98,12 +130,19 @@ function BoogieMain() {
               </Snow>
               <ExplainText>눈덩이를 클릭하여 메세지를 남겨보세요!</ExplainText>
             </div>
-            <CreateBtn>
+            <CreateBtn onClick={openModal}>
               <PlusBtn src={Add} />내 눈덩이 페이지 생성하기
             </CreateBtn>
           </RowContainer>
+
+          <BallImageContainer>
+            <BallImg src={EmptyBall} />
+            <Yet>아직 부기볼에 눈덩이 메세지가 없어요</Yet>
+          </BallImageContainer>
         </ContentContainer>
       </WholeContainer>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
 }
