@@ -3,11 +3,52 @@ import styled from 'styled-components';
 import SendModal from './SendModal';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function WriteMessage() {
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [messageContent, setMessageContent] = useState(''); // messageContent 상태 추가
+  const navigate = useNavigate();
+
+  const handleSendMessage = async () => {
+    const accessToken = localStorage.getItem('authToken'); // AccessToken 불러오기
+
+    if (!accessToken) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+
+    if (!messageContent.trim()) {
+      alert('메세지를 입력해주세요.');
+      return;
+    }
+
+    const requestBody = {
+      paperId: 1, // 요청에 필요한 paperId
+      content: messageContent, // messageContent를 보내기
+    };
+
+    try {
+      const response = await axios.post('https://bugi-ball.shop/api/message', requestBody, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    
+      if (response.status === 200) {
+        setIsModalOpen(true); // 성공 시 모달 열기
+      } else {
+        alert('메세지 전송에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('메세지 전송 중 오류 발생:', error);
+      alert('메세지 전송에 실패했습니다. 다시 시도해주세요.');
+    }
+    
+  };
+
   
     useEffect(() => {
       if (isModalOpen) {
@@ -24,8 +65,10 @@ function WriteMessage() {
       <Header />
 
       <WholeContainer>
-        <MessageContainer placeholder={`메세지를 남겨주세요!\n한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.`} />
-        <Button onClick={() => setIsModalOpen(true)}>메시지 전달하기</Button>
+        <MessageContainer placeholder={`메세지를 남겨주세요!\n한 번 업로드하면 수정할 수 없으니 신중하게 작성해주세요.`} 
+        value={messageContent}
+        onChange={(e) => setMessageContent(e.target.value)} />
+        <Button onClick={handleSendMessage}>메시지 전달하기</Button>
 
         {isModalOpen && (
           <SendModal
