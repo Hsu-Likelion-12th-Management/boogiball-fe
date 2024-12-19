@@ -46,17 +46,15 @@ const PeopleImg = styled.img`
   height: 4vw;
 `;
 
-function Header() {
+function Header({ title }) {
   return (
-    <>
-      <HeaderContainer>
-        <HeaderNav>
-          <HomeImg src={Home} alt="Home" />
-          <Title>부기볼명이 적히는 곳</Title>
-          <PeopleImg src={People} alt="People" />
-        </HeaderNav>
-      </HeaderContainer>
-    </>
+    <HeaderContainer>
+      <HeaderNav>
+        <HomeImg src={Home} alt="Home" />
+        <Title>{title}</Title>
+        <PeopleImg src={People} alt="People" />
+      </HeaderNav>
+    </HeaderContainer>
   );
 }
 
