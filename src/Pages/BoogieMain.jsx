@@ -80,8 +80,6 @@ const CreateBtn = styled.button`
 const PlusBtn = styled.img`
   width: 1.6vw;
   height: 1.6vw;
-  width: 1.6vw;
-  height: 1.6vw;
   display: inline-block;
   vertical-align: middle;
 `;
@@ -112,9 +110,35 @@ const Yet = styled.p`
 
 function BoogieMain() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const accessToken = localStorage.getItem('accessToken');
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const createSnowballPage = async () => {
+    try {
+      const response = await fetch('https://bugi-ball.shop/api/paper', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        // No body needed
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Snowball page created successfully:', data);
+        alert('새로운 눈덩이 페이지가 생성되었습니다!');
+      } else {
+        console.error('Failed to create snowball page:', response.status);
+        alert('페이지 생성에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('Error creating snowball page:', error);
+      alert('에러가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
 
   return (
     <>
@@ -130,7 +154,7 @@ function BoogieMain() {
               </Snow>
               <ExplainText>눈덩이를 클릭하여 메세지를 남겨보세요!</ExplainText>
             </div>
-            <CreateBtn onClick={openModal}>
+            <CreateBtn onClick={createSnowballPage}>
               <PlusBtn src={Add} />내 눈덩이 페이지 생성하기
             </CreateBtn>
           </RowContainer>
