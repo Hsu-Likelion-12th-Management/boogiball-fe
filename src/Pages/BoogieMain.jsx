@@ -360,7 +360,7 @@ function BoogieMain() {
 
   return (
     <>
-      <Header title={`${name} 님의 눈덩이`} />
+      <Header title='멋쟁이 사자처럼 12기' />
 
       <WholeContainer>
         <ContentContainer>
