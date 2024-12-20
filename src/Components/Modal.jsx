@@ -62,8 +62,21 @@ const SnowManImg = styled.img`
   height: 17vw;
 `;
 
-const Modal = ({ isOpen, onClose, name, isPageCreated }) => {
+const Modal = ({ isOpen, onClose, name, type }) => {
   if (!isOpen) return null;
+
+  const modalMessage =
+    type === 'finished' ? (
+      <>
+        {name}님의 눈덩이 페이지가 <br />
+        작성이 종료되었습니다.
+      </>
+    ) : (
+      <>
+        {name}님의 눈덩이 페이지가 <br />
+        생성되었습니다.
+      </>
+    );
 
   return (
     <ModalOverlay>
@@ -72,10 +85,7 @@ const Modal = ({ isOpen, onClose, name, isPageCreated }) => {
         <ColumnContainer>
           <ModalTitle>Notice</ModalTitle>
           <SnowManImg src={SnowMan} />
-          <ModalTitle>
-            {name}님의 눈덩이 페이지가 <br />
-            {isPageCreated ? '생성되었습니다.' : '작성이 종료되었습니다.'}
-          </ModalTitle>
+          <ModalTitle>{modalMessage}</ModalTitle>
         </ColumnContainer>
       </ModalContainer>
     </ModalOverlay>
