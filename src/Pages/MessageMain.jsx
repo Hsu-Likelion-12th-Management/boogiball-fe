@@ -6,12 +6,15 @@ import icon1 from '../Assets/message/icon1.svg';
 import icon2 from '../Assets/message/icon2.svg';
 import icon3 from '../Assets/message/icon3.svg';
 import icon4 from '../Assets/message/icon4.svg';
+import icon5 from '../Assets/message/icon5.svg';
+import icon6 from '../Assets/message/icon6.svg';
+import icon7 from '../Assets/message/icon7.svg';
 import { Navigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
 export default function MessageMain() {
   const [messages, setMessages] = useState([]);
-  const icons = [icon1, icon2, icon3, icon4];
+  const icons = [icon1, icon2, icon3, icon4, icon5, icon6, icon7];
   const { paperId } = useParams(); // URL에서 paperId 가져오기
   const navigate = useNavigate();
   const name = localStorage.getItem('name');
