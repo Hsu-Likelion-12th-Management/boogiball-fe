@@ -178,6 +178,7 @@ function BoogieMain() {
       });
 
       const data = await response.json().data;
+      console.log(data);
       console.log(data.isFinish);
 
       if (data.isFinish) {
