@@ -15,7 +15,7 @@ const WholeContainer = styled.div`
   display: flex;
   flex-direction: column;
   background: var(--gray-100, #f2f4f6);
-  height: calc(100vh - 7vw);
+  // height: calc(100vh - 7vw);
 `;
 
 const ContentContainer = styled.div`
