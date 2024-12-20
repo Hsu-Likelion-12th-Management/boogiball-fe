@@ -9,6 +9,7 @@ import SnowBall from '../Assets/Images/img_madeball.svg';
 import { useNavigate } from 'react-router-dom';
 import YellowBall from '../Assets/Images/img_madeball (1).svg';
 import EndModal from '../Components/EndModal';
+import { useLocation } from 'react-router-dom';
 
 const WholeContainer = styled.div`
   display: flex;
@@ -162,7 +163,9 @@ function BoogieMain() {
   const [isEndModalOpen, setIsEndModalOpen] = useState(false);
   const [selectedPaperName, setSelectedPaperName] = useState('');
   const [selectedPaperId, setSelectedPaperId] = useState(null);
-
+  const location = useLocation(); // state 가져오기
+  const { name } = location.state || {}; // location.state에서 name 추출
+  
   const fetchFinishStatus = async () => {
     const accessToken = localStorage.getItem('accessToken');
     try {
@@ -351,14 +354,14 @@ function BoogieMain() {
 
   return (
     <>
-      <Header title="부기볼명이 적히는 곳" />
+      <Header title={name} />
 
       <WholeContainer>
         <ContentContainer>
           <RowContainer>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <Snow>
-                <HighlightedText>부기볼명</HighlightedText> 에 생성된
+                <HighlightedText>멋쟁이 사자처럼 12기</HighlightedText> 에 생성된
                 눈덩이들이에요
               </Snow>
               <ExplainText>눈덩이를 클릭하여 메세지를 남겨보세요!</ExplainText>
