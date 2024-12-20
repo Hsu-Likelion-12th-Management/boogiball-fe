@@ -165,6 +165,27 @@ function BoogieMain() {
   const [selectedPaperId, setSelectedPaperId] = useState(null);
   const location = useLocation(); // state 가져오기
   const { name } = location.state || {}; // location.state에서 name 추출
+
+  const getCreatedUser = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch(`https://bugi-ball.shop/api/paper/check`, {
+        method: "GET",
+        headers: {
+          Authorization: `Berear ${accessToken}`,
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const data = await response.json();
+      console.log(data.data);
+      if(data.data.isExit) {
+        setIsPageCreated(true);
+      }
+    } catch(e) {
+      console.error(e);
+    }
+  }
   
   const fetchFinishStatus = async () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -286,6 +307,7 @@ function BoogieMain() {
   useEffect(() => {
     fetchFinishStatus();
     fetchPaperList();
+    getCreatedUser();
   }, []);
 
   const createSnowballPage = async () => {
@@ -304,7 +326,7 @@ function BoogieMain() {
 
         setModalData(data.data); // 모달에 사용할 데이터 저장
         setIsModalOpen(true); // 모달 열기
-        setIsPageCreated(true); // 생성 성공 상태 변경
+        // setIsPageCreated(true); // 생성 성공 상태 변경
         fetchPaperList(); // 페이지 목록 갱신
       } else {
         console.error('Failed to create snowball page:', response.status);
