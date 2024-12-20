@@ -194,6 +194,7 @@ function BoogieMain() {
   const handleSnowBallClick = async (paperId, name, isFinished, isMine) => {
     if (isMine) {
       // 자신의 눈덩이인 경우 MessageMain으로 이동
+      localStorage.setItem('name', name);
       setSelectedPaperId(paperId);
       navigate(`/MessageMain/${paperId}`); // 자신의 메시지 보기
       return;
