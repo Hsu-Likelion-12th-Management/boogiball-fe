@@ -52,7 +52,7 @@ export default function MessageMain() {
 
   return (
     <>
-      <Header title={name} 님의 눈덩이/>
+      <Header title={`${name} 님의 눈덩이`} />
 
       <WholeContainer>
         <Wrapper>

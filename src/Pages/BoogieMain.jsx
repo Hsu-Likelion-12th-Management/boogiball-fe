@@ -354,7 +354,7 @@ function BoogieMain() {
 
   return (
     <>
-      <Header title={name} />
+      <Header title={`${name} 님의 눈덩이`} />
 
       <WholeContainer>
         <ContentContainer>
