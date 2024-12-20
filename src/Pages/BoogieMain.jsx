@@ -172,7 +172,7 @@ function BoogieMain() {
       const response = await fetch(`https://bugi-ball.shop/api/paper/check`, {
         method: "GET",
         headers: {
-          Authorization: `Berear ${accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         }
       });
