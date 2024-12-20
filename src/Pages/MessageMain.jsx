@@ -42,6 +42,7 @@ export default function MessageMain() {
       } else {
         console.error('Failed to fetch messages:', response.status);
         alert('본인 메세지만 볼 수 있습니다.');
+        navigate("/BoogieMain");
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
