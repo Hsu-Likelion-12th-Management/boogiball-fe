@@ -365,14 +365,15 @@ function BoogieMain() {
 
   return (
     <>
-      <Header title='멋쟁이 사자처럼 12기' />
+      {/* <Header title='멋쟁이 사자처럼 12기' /> */}
+      <Header title={`${name}님의 눈덩이`} />
 
       <WholeContainer>
         <ContentContainer>
           <RowContainer>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <Snow>
-                <HighlightedText>멋쟁이사자처럼 12기</HighlightedText> 에 생성된
+                <HighlightedText>멋쟁이사자처럼 12기</HighlightedText>에 생성된
                 눈덩이들이에요
               </Snow>
               <ExplainText>눈덩이를 클릭하여 메세지를 남겨보세요!</ExplainText>
