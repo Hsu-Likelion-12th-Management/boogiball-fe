@@ -14,8 +14,7 @@ export default function MessageMain() {
   const icons = [icon1, icon2, icon3, icon4];
   const { paperId } = useParams(); // URL에서 paperId 가져오기
   const navigate = useNavigate();
-  const location = useLocation(); // state 가져오기
-  const { name } = location.state || {}; // location.state에서 name 추출
+  const name = localStorage.getItem('name');
 
   // 메시지 조회 API 호출 함수
   const fetchMessages = async () => {
@@ -55,7 +54,7 @@ export default function MessageMain() {
 
   return (
     <>
-      <Header title={name} 님의 눈덩이/>
+      <Header title={`${name} 님의 눈덩이`} />
 
       <WholeContainer>
         <Wrapper>
