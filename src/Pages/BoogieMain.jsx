@@ -143,7 +143,7 @@ const SnowBallName = styled.div`
 
 const SnowBallCon = styled.div`
   display: grid;
-  flex-direction: row;
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5vw;
 `;
 
@@ -398,7 +398,7 @@ function BoogieMain() {
             </BallImageContainer>
           ) : (
             <SnowBallCon>
-              {paperRows.map((row, rowIndex) => (
+              {/* {paperRows.map((row, rowIndex) => (
                 <SnowBallRow key={rowIndex}>
                   {row.map((paper) => (
                     <SnowBallWrapper key={paper.paperId}>
@@ -419,7 +419,24 @@ function BoogieMain() {
                     </SnowBallWrapper>
                   ))}
                 </SnowBallRow>
-              ))}
+              ))} */}
+              {papers.map((item, index) => {
+                <SnowBallWrapper key={index}>
+                  <SnowBalls
+                    src={item.isFinished ? YellowBall : SnowBall}
+                    alt={item.name || 'Snowball'}
+                    onClick={() =>
+                      handleSnowBallClick(
+                        item.paperId,
+                        item.name,
+                        item.isFinished,
+                        item.isMine
+                      )
+                    }
+                  />
+                  <SnowBallName>{item.name}</SnowBallName>
+                </SnowBallWrapper>
+              })}
             </SnowBallCon>
           )}
         </ContentContainer>
