@@ -188,24 +188,30 @@ function BoogieMain() {
   const closeModal = () => setIsModalOpen(false);
   const navigate = useNavigate();
 
-  const handleSnowBallClick = (paperId, name, isFinished, isMine) => {
+  const handleSnowBallClick = async (paperId, name, isFinished, isMine) => {
     if (isMine) {
       alert('내 눈덩이에는 메시지를 작성할 수 없습니다.');
       return;
     }
 
     if (isFinished) {
-      setSelectedPaperId(paperId); // 선택한 paperId 저장
-      setSelectedPaperName(name); // 클릭한 눈덩이 이름 설정
-      setIsEndModalOpen(true); // EndModal 열기
-    } else {
-      navigate(`/WriteMessage/${paperId}`, { state: { name } }); // 작성 가능 페이지로 이동
+      setSelectedPaperId(paperId);
+      setSelectedPaperName(name);
+      setIsEndModalOpen(true);
+      return;
     }
+
+    const { isWritable, message } = await checkWritePermission(paperId);
+
+    if (!isWritable) {
+      alert(message || '이 눈덩이에는 이미 메시지를 작성했습니다.');
+      return;
+    }
+
+    navigate(`/WriteMessage/${paperId}`, { state: { name } });
   };
 
   const checkWritePermission = async (paperId) => {
-    const accessToken = localStorage.getItem('accessToken');
-
     try {
       const response = await fetch(
         `https://bugi-ball.shop/api/paper/${paperId}/check`,
@@ -224,8 +230,7 @@ function BoogieMain() {
         const responseData = await response.json();
         return {
           isWritable: false,
-          message: responseData.message || '작성할 수 없습니다.', // 응답 메시지
-          code: responseData.code, // 에러 코드
+          message: responseData.message || '작성할 수 없습니다.',
         };
       }
     } catch (error) {
@@ -328,7 +333,10 @@ function BoogieMain() {
           )
         );
         setIsFinished(true); // 작성 종료 상태 업데이트
-        setModalData({ name: modalData?.name });
+        setModalData({
+          name: modalData?.name || '알 수 없는 사용자',
+          type: 'finished', // 작성 종료 모달로 구분
+        });
         setIsModalOpen(true); // 모달 열기
       } else {
         alert('작성 종료에 실패했습니다. 다시 시도해주세요.');
@@ -412,7 +420,7 @@ function BoogieMain() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         name={modalData?.name || '알 수 없는 사용자'}
-        isPageCreated={isPageCreated}
+        type={modalData?.type || 'created'} // type에 따라 텍스트 변경
       />
 
       <EndModal
