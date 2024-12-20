@@ -142,7 +142,7 @@ const SnowBallName = styled.div`
 `;
 
 const SnowBallCon = styled.div`
-  display: flex;
+  display: grid;
   flex-direction: row;
   gap: 0.5vw;
 `;
