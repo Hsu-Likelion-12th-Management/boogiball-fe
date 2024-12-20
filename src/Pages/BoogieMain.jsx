@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import SnowBall from '../Assets/Images/img_madeball.svg';
 import { useNavigate } from 'react-router-dom';
+import YellowBall from '../Assets/Images/img_madeball (1).svg';
+import EndModal from '../Components/EndModal';
 
 const WholeContainer = styled.div`
   display: flex;
@@ -61,7 +63,8 @@ const CreateBtn = styled.button`
   height: 3.1vw;
   flex-shrink: 0;
   border-radius: 0.5vw;
-  background: var(--main-blue, #002e6e);
+  background: ${({ isFinished }) =>
+    isFinished ? 'var(--gray-600, #ADB3BA)' : 'var(--main-blue, #002e6e)'};
   color: var(--gray-white, #fff);
   text-align: center;
   font-feature-settings: 'liga' off, 'clig' off;
@@ -77,7 +80,8 @@ const CreateBtn = styled.button`
   gap: 0.5vw;
   padding: 0;
   border: none;
-  cursor: pointer;
+  cursor: ${({ isFinished }) => (isFinished ? 'not-allowed' : 'pointer')};
+  pointer-events: ${({ isFinished }) => (isFinished ? 'none' : 'auto')};
 `;
 
 const PlusBtn = styled.img`
@@ -152,18 +156,50 @@ function BoogieMain() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [papers, setPapers] = useState([]);
   const accessToken = localStorage.getItem('accessToken');
+  const [modalData, setModalData] = useState(null);
+  const [isPageCreated, setIsPageCreated] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
+  const [isEndModalOpen, setIsEndModalOpen] = useState(false);
+  const [selectedPaperName, setSelectedPaperName] = useState('');
+  const [selectedPaperId, setSelectedPaperId] = useState(null);
+
+  const fetchFinishStatus = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch('https://bugi-ball.shop/api/paper/finish', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setIsFinished(true); // 200 응답 시 회색 버튼 상태로 전환
+      } else {
+        setIsFinished(false); // 응답이 200이 아니면 파란색으로 유지
+      }
+    } catch (error) {
+      console.error('Error fetching finish status:', error);
+    }
+  };
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const navigate = useNavigate();
 
-  const handleSnowBallClick = async (paperId, name) => {
-    const result = await checkWritePermission(paperId);
+  const handleSnowBallClick = (paperId, name, isFinished, isMine) => {
+    if (isMine) {
+      alert('내 눈덩이에는 메시지를 작성할 수 없습니다.');
+      return;
+    }
 
-    if (result.isWritable) {
-      navigate(`/WriteMessage/${paperId}`, { state: { name } });
+    if (isFinished) {
+      setSelectedPaperId(paperId); // 선택한 paperId 저장
+      setSelectedPaperName(name); // 클릭한 눈덩이 이름 설정
+      setIsEndModalOpen(true); // EndModal 열기
     } else {
-      alert(result.message);
+      navigate(`/WriteMessage/${paperId}`, { state: { name } }); // 작성 가능 페이지로 이동
     }
   };
 
@@ -212,23 +248,24 @@ function BoogieMain() {
       });
 
       if (response.ok) {
-        const responseData = await response.json(); // 응답 데이터 전체
-        console.log('Fetched paper list:', responseData);
-
-        setPapers(responseData.data || []);
+        const responseData = await response.json();
+        setPapers(
+          responseData.data.map((paper) => ({
+            ...paper,
+            isFinished: paper.isFinish || false, // API 응답에 따라 초기 상태 설정
+            isMine: paper.isMine || false, // 내 눈사람 여부 추가
+          }))
+        );
       } else {
         console.error('Failed to fetch paper list:', response.status);
-        alert('리스트를 불러오지 못했습니다.');
-        setPapers([]);
       }
     } catch (error) {
       console.error('Error fetching paper list:', error);
-      alert('네트워크 에러가 발생했습니다.');
-      setPapers([]);
     }
   };
 
   useEffect(() => {
+    fetchFinishStatus();
     fetchPaperList();
   }, []);
 
@@ -246,8 +283,10 @@ function BoogieMain() {
         const data = await response.json();
         console.log('Snowball page created successfully:', data);
 
-        setIsModalOpen(true);
-        fetchPaperList();
+        setModalData(data.data); // 모달에 사용할 데이터 저장
+        setIsModalOpen(true); // 모달 열기
+        setIsPageCreated(true); // 생성 성공 상태 변경
+        fetchPaperList(); // 페이지 목록 갱신
       } else {
         console.error('Failed to create snowball page:', response.status);
         alert('페이지 생성에 실패했습니다. 다시 시도해주세요.');
@@ -266,6 +305,40 @@ function BoogieMain() {
     return result;
   };
 
+  const handlePageClose = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch('https://bugi-ball.shop/api/paper/finish', {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json(); // 응답 데이터 활용
+        const currentPaperId = data?.paperId; // 작성 종료된 paperId 가져오기
+
+        setPapers((prevPapers) =>
+          prevPapers.map((paper) =>
+            paper.paperId === currentPaperId
+              ? { ...paper, isFinished: true } // 해당 paper만 isFinished 업데이트
+              : paper
+          )
+        );
+        setIsFinished(true); // 작성 종료 상태 업데이트
+        setModalData({ name: modalData?.name });
+        setIsModalOpen(true); // 모달 열기
+      } else {
+        alert('작성 종료에 실패했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('Error finishing snowball page:', error);
+      alert('네트워크 에러가 발생했습니다.');
+    }
+  };
+
   const paperRows = chunkArray(papers, 5);
 
   return (
@@ -282,8 +355,22 @@ function BoogieMain() {
               </Snow>
               <ExplainText>눈덩이를 클릭하여 메세지를 남겨보세요!</ExplainText>
             </div>
-            <CreateBtn onClick={createSnowballPage}>
-              <PlusBtn src={Add} />내 눈덩이 페이지 생성하기
+            <CreateBtn
+              isFinished={isFinished}
+              onClick={
+                isFinished
+                  ? undefined
+                  : isPageCreated
+                  ? handlePageClose
+                  : createSnowballPage
+              }
+            >
+              {!isPageCreated && !isFinished && <PlusBtn src={Add} />}
+              {isFinished
+                ? '작성 종료됨'
+                : isPageCreated
+                ? '내 눈덩이 작성 종료'
+                : '내 눈덩이 페이지 생성하기'}
             </CreateBtn>
           </RowContainer>
 
@@ -299,12 +386,18 @@ function BoogieMain() {
                   {row.map((paper) => (
                     <SnowBallWrapper key={paper.paperId}>
                       <SnowBalls
-                        src={SnowBall}
+                        src={paper.isFinished ? YellowBall : SnowBall}
                         alt={paper.name || 'Snowball'}
                         onClick={() =>
-                          handleSnowBallClick(paper.paperId, paper.name)
+                          handleSnowBallClick(
+                            paper.paperId,
+                            paper.name,
+                            paper.isFinished,
+                            paper.isMine
+                          )
                         }
                       />
+
                       <SnowBallName>{paper.name}</SnowBallName>
                     </SnowBallWrapper>
                   ))}
@@ -315,8 +408,24 @@ function BoogieMain() {
         </ContentContainer>
       </WholeContainer>
 
-      {/* 모달 컴포넌트 */}
-      <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        name={modalData?.name || '알 수 없는 사용자'}
+        isPageCreated={isPageCreated}
+      />
+
+      <EndModal
+        isOpen={isEndModalOpen}
+        onClose={() => setIsEndModalOpen(false)}
+        name={selectedPaperName}
+        onConfirm={() => {
+          setIsEndModalOpen(false);
+          if (selectedPaperId) {
+            navigate(`/MessageMain/${selectedPaperId}`);
+          }
+        }}
+      />
     </>
   );
 }

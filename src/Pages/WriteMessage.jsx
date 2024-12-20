@@ -59,7 +59,7 @@ function WriteMessage() {
   useEffect(() => {
     if (isModalOpen) {
       const timer = setTimeout(() => {
-        navigate('/MessageMain');
+        navigate('/BoogieMain');
       }, 2000);
 
       return () => clearTimeout(timer);
