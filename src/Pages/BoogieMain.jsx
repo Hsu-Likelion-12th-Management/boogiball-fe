@@ -387,8 +387,8 @@ function BoogieMain() {
 
   return (
     <>
-      {/* <Header title='멋쟁이 사자처럼 12기' /> */}
-      <Header title={`${name}님의 눈덩이`} />
+      <Header title='멋쟁이사자처럼 12기' />
+      {/* <Header title={`${name}님의 눈덩이`} /> */}
 
       <WholeContainer>
         <ContentContainer>
