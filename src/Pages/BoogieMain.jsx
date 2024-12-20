@@ -177,7 +177,7 @@ function BoogieMain() {
         },
       });
 
-      console.log(response.data);
+      console.log(response.json());
 
       if (response.ok) {
         setIsFinished(true); // 200 응답 시 회색 버튼 상태로 전환
