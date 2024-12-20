@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // useParams로 paperId 가져오기
+import { useNavigate, useParams } from 'react-router-dom'; // useParams로 paperId 가져오기
 import Header from '../Components/Header';
 import styled from 'styled-components';
 import icon1 from '../Assets/message/icon1.svg';
 import icon2 from '../Assets/message/icon2.svg';
 import icon3 from '../Assets/message/icon3.svg';
 import icon4 from '../Assets/message/icon4.svg';
+import { Navigate } from 'react-router-dom';
 
 export default function MessageMain() {
   const [messages, setMessages] = useState([]);
   const icons = [icon1, icon2, icon3, icon4];
   const { paperId } = useParams(); // URL에서 paperId 가져오기
+  const navigate = useNavigate();
 
   // 메시지 조회 API 호출 함수
   const fetchMessages = async () => {
@@ -34,7 +36,7 @@ export default function MessageMain() {
         setMessages(responseData.data || []);
       } else {
         console.error('Failed to fetch messages:', response.status);
-        alert('메시지를 불러오지 못했습니다.');
+        alert('본인 메세지만 볼 수 있습니다.');
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
