@@ -177,10 +177,10 @@ function BoogieMain() {
         },
       });
 
-      const data = response.json().data;
+      const data = await response.json().data;
       console.log(data.isFinish);
 
-      if (response.ok) {
+      if (data.isFinish) {
         setIsFinished(true); // 200 응답 시 회색 버튼 상태로 전환
       } else {
         setIsFinished(false); // 응답이 200이 아니면 파란색으로 유지
