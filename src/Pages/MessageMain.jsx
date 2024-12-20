@@ -7,12 +7,15 @@ import icon2 from '../Assets/message/icon2.svg';
 import icon3 from '../Assets/message/icon3.svg';
 import icon4 from '../Assets/message/icon4.svg';
 import { Navigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export default function MessageMain() {
   const [messages, setMessages] = useState([]);
   const icons = [icon1, icon2, icon3, icon4];
   const { paperId } = useParams(); // URL에서 paperId 가져오기
   const navigate = useNavigate();
+  const location = useLocation(); // state 가져오기
+  const { name } = location.state || {}; // location.state에서 name 추출
 
   // 메시지 조회 API 호출 함수
   const fetchMessages = async () => {
@@ -51,7 +54,7 @@ export default function MessageMain() {
 
   return (
     <>
-      <Header />
+      <Header title={name} 님의 눈덩이/>
 
       <WholeContainer>
         <Wrapper>
