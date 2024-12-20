@@ -421,21 +421,23 @@ function BoogieMain() {
                 </SnowBallRow>
               ))} */}
               {papers.map((item, index) => {
-                <SnowBallWrapper key={index}>
-                  <SnowBalls
-                    src={item.isFinished ? YellowBall : SnowBall}
-                    alt={item.name || 'Snowball'}
-                    onClick={() =>
-                      handleSnowBallClick(
-                        item.paperId,
-                        item.name,
-                        item.isFinished,
-                        item.isMine
-                      )
-                    }
-                  />
-                  <SnowBallName>{item.name}</SnowBallName>
-                </SnowBallWrapper>
+                return (
+                  <SnowBallWrapper key={index}>
+                    <SnowBalls
+                      src={item.isFinished ? YellowBall : SnowBall}
+                      alt={item.name || 'Snowball'}
+                      onClick={() =>
+                        handleSnowBallClick(
+                          item.paperId,
+                          item.name,
+                          item.isFinished,
+                          item.isMine
+                        )
+                      }
+                    />
+                    <SnowBallName>{item.name}</SnowBallName>
+                  </SnowBallWrapper>
+                )
               })}
             </SnowBallCon>
           )}
