@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom'; // useParams로 paperId 가져오기
 import Header from '../Components/Header';
 import styled from 'styled-components';
 import icon1 from '../Assets/message/icon1.svg';
@@ -7,9 +8,9 @@ import icon3 from '../Assets/message/icon3.svg';
 import icon4 from '../Assets/message/icon4.svg';
 
 export default function MessageMain() {
-  const [messages, setMessages] = useState([]); // 메시지 데이터를 상태로 관리
+  const [messages, setMessages] = useState([]);
   const icons = [icon1, icon2, icon3, icon4];
-  const paperId = 2; // paperId는 고정값으로 설정
+  const { paperId } = useParams(); // URL에서 paperId 가져오기
 
   // 메시지 조회 API 호출 함수
   const fetchMessages = async () => {
@@ -30,7 +31,7 @@ export default function MessageMain() {
       if (response.ok) {
         const responseData = await response.json();
         console.log('Fetched messages:', responseData.data);
-        setMessages(responseData.data || []); // 메시지 데이터를 상태로 설정
+        setMessages(responseData.data || []);
       } else {
         console.error('Failed to fetch messages:', response.status);
         alert('메시지를 불러오지 못했습니다.');
@@ -44,7 +45,7 @@ export default function MessageMain() {
   // 컴포넌트가 처음 렌더링될 때 메시지 조회
   useEffect(() => {
     fetchMessages();
-  }, []);
+  }, [paperId]); // paperId 변경 시 다시 호출
 
   return (
     <>
@@ -108,7 +109,7 @@ const Content = styled.div`
   font-size: 10px;
   font-style: normal;
   font-weight: 500;
-  line-height: 150%; /* 18px */
+  line-height: 150%;
   border-radius: 10px;
   border: 1px solid var(--blue-200, #d6e6ff);
   background: var(--gray-white, #fff);

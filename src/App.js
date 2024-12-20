@@ -16,7 +16,7 @@ function App() {
         <Route path="/BoogieMain" element={<BoogieMain />} />
         <Route path="/Kakao/callback" element={<KakaoLoginCallback />} />
         <Route path="/WriteMessage/:paperId" element={<WriteMessage />} />
-        <Route path="/MessageMain" element={<MessageMain />} />
+        <Route path="/MessageMain/:paperId" element={<MessageMain />} />
       </Routes>
     </Router>
   );
