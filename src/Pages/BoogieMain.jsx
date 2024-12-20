@@ -193,17 +193,11 @@ function BoogieMain() {
 
   const handleSnowBallClick = async (paperId, name, isFinished, isMine) => {
     if (isMine) {
-      // 자신의 눈덩이인 경우 MessageMain으로 이동
-      localStorage.setItem('name', name);
-      const name = localStorage.getItem('name');
-      console.log("name", name);
-      setSelectedPaperId(paperId);
-      navigate(`/MessageMain/${paperId}`); // 자신의 메시지 보기
+      alert('내 눈덩이에는 메시지를 작성할 수 없습니다.');
       return;
     }
 
     if (isFinished) {
-      // 남의 눈덩이인 경우 EndModal 표시
       setSelectedPaperId(paperId);
       setSelectedPaperName(name);
       setIsEndModalOpen(true);
@@ -360,7 +354,7 @@ function BoogieMain() {
 
   return (
     <>
-      <Header title={`${name} 님의 눈덩이`} />
+      <Header title={name} />
 
       <WholeContainer>
         <ContentContainer>
