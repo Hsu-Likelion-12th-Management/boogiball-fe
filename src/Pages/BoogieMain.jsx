@@ -179,7 +179,7 @@ function BoogieMain() {
 
       const data = await response.json();
       console.log(data.data);
-      if(data.data.isExit) {
+      if(data.data.isExist) {
         setIsPageCreated(true);
       }
     } catch(e) {
